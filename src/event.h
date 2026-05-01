@@ -111,3 +111,13 @@ typedef struct {
   char regiao[TAM_MAX_NOME_REGIAO];
   StatusEvento status;
 } Evento;
+
+// /\/\/\ FUNCS UTILITARIAS
+const char *tipo_p_string(TipoEvento tipo);
+const char *status-p_string(StatusEvento status);
+int valida_evento(const Evento *e);
+void exibe_evento(const Evento *e);
+void datahora_p_string(const DataHora *dh, char *buffer, int tam_buffer);
+int valida_datahora(const DataHora *dh);
+
+#endif
