@@ -14,7 +14,7 @@ typedef enum {
   ACIDENTE_DE_TRANSITO_COM_VITIMA_LEVE = 1,
   ACIDENTE_DE_TRANSITO_COM_VITIMA_GRAVE = 2,
   ENGAVETAMENTO_NA_VIA_EXPRESSA = 3,
-  ATROPELAMENTO DE PEDESTRE = 4,
+  ATROPELAMENTO_DE_PEDESTRE = 4,
   VEICULO_EM_CHAMAS_NA_PISTA = 5,
   // infra
   SEMAFORO_INOPERANTE = 6,
@@ -59,7 +59,7 @@ typedef enum {
   ENCHENTE = 40,
   TERREMOTO = 41,
   // segurança publica
-  FURTO = 42
+  FURTO = 42,
   ASSALTO_A_TRANSEUNTES = 43,
   ARRASTAO = 44,
   ASSALTO_AO_BANCO = 51,
@@ -70,7 +70,7 @@ typedef enum {
   TIROTEIO_ESCOLAR = 49,
   INVASAO_ARMADA_A_EDIFICIO = 50,
   CONFRONTO_DE_FACCOES = 52,
-  BOMBA_EM_VIA_PUBLICA = 53
+  BOMBA_EM_VIA_PUBLICA = 53,
   // desatres estruturais
   DESLIZAMENTO_DE_TERRA_EM_COMUNIDADE = 54,
   DESABAMENTO_DE_PREDIO_RESIDENCIAL = 55,
@@ -84,7 +84,7 @@ typedef enum {
   ROMPIMENTO_DE_BARRAGEM = 63,
   // saude publica
   SURTO_DE_DOENCA = 64,
-  CONTAMINACAO_DE_AGUA POTAVEL = 65
+  CONTAMINACAO_DE_AGUA_POTAVEL = 65
 } TipoEvento;
 
 // status
@@ -114,7 +114,7 @@ typedef struct {
 
 // /\/\/\ FUNCS UTILITARIAS
 const char *tipo_p_string(TipoEvento tipo);
-const char *status-p_string(StatusEvento status);
+const char *status_p_string(StatusEvento status);
 int valida_evento(const Evento *e);
 void exibe_evento(const Evento *e);
 void datahora_p_string(const DataHora *dh, char *buffer, int tam_buffer);
