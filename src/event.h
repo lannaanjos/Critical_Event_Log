@@ -86,3 +86,28 @@ typedef enum {
   SURTO_DE_DOENCA = 64,
   CONTAMINACAO_DE_AGUA POTAVEL = 65
 } TipoEvento;
+
+// status
+typedef enum{
+  ATIVO = 0,
+  RESOLVIDO = 1
+} StatusEvento;
+
+typedef struct {
+  int dia;
+  int mes;
+  int ano;
+  int hora;
+  int minuto;
+  int segundo;
+} DataHora;
+
+// /\/\/\ EVENTO
+typedef struct {
+  int id; // primary key
+  TipoEvento tipo;
+  int magnitude; // severidade
+  DataHora timestamp;
+  char regiao[TAM_MAX_NOME_REGIAO];
+  StatusEvento status;
+} Evento;
