@@ -254,3 +254,55 @@ NoAVL *avl_buscar_evento(AVL *avl, int id){
   }
   return NULL; // n achou 
 }
+
+// /\/\ ops de atualização
+int avl_atualizar_status(AVL *avl, int it, StatusEvento novo_status){
+  if (avl == NULL)
+    return 0;
+
+  NoAVL *no = avl_buscar_evento(avl, id);
+
+  if (no == NULL){
+    printf("[ERRO]\nEvento não encontrado!\n");
+    return 0;
+  }
+
+  if (no->evento.status == novo_status){
+    printf("[ATENÇÃO]\nO evento de ID %d já possui o novo status inserido!\n", id);
+    return 0;
+  }
+
+  if (novo_status == ATIVO)
+    avl->total_ativos++;
+  else if (novo == RESOLVIDO)
+      avl->total_ativos--;
+
+  no->evento.status = novo_status;
+  return 1;
+}
+
+int avl_atualizar_magnitude(AVL *avl, int id, nova_magnitude){
+  if (avl == NULL)
+    return 0;
+
+  if (nova_magnitude < MAGNITUDE_MIN || nova_magnitude > MAGNITUDE_MAX){
+    printf("[ERRO]\nMagnitude inválida! Insira um número entre %d e %d.\n", MAGNITUDE_MIN, MAGNITUDE_MAX);
+    return 0;
+  }
+
+  NoAVL *no = avl_buscar_evento(avl, id);
+
+  if (no == NULL){
+    printf("[ERRO]\nEvento não encontrado!\n");
+    return 0;
+  }
+
+  if (no->evento.status == RESOLVIDO){
+    printf("[ATENÇÃO]\nNão é possível alterar magnitude um evento já resolvido\n");
+    return 0;
+  }
+
+  no->evento.magnitude = nova_magnitude;
+  return 1;
+
+}
