@@ -5,7 +5,7 @@
 AVL *criar_avl(void){
   AVL *avl = (AVL*)malloc(sizeof(AVL));
   if (avl == NULL){
-    printf("Alocação de memória mal-sucedida!\n");
+    printf("[ERRO]\nAlocação de memória mal-sucedida!\n");
     return NULL;
   }
 
@@ -129,7 +129,7 @@ static NoAVL *_insercao_recursiva(AVL *avl, NoAVL *no, Evento evento, int *suces
   if (no == NULL){
     NoAVL *novo = (NoAVL*)malloc(sizeof(NoAVL));
     if (novo == NULL){
-      printf("Alocação de memória mal-sucedida!\n");
+      printf("[ERRO]\nAlocação de memória mal-sucedida!\n");
       *sucesso = 0;
       return NULL;
     }
@@ -170,6 +170,70 @@ int avl_inserir_evento(AVL *avl, Evento evento){
     if (evento.status == ATIVO)
       avl->total_ativos++;
   }
+
+  return sucesso;
+}
+
+// /\ remoção
+NoAVL *_no_minimo(NoAVL *no){
+  if (no == NULL)
+    return NULL;
+
+  while (no->esquerda != NULL) {
+    no = no->esquerda;
+  }
+  return no;
+}
+
+static NoAVL *_remocao_recursiva(AVL *avl, NoAVL *no, int id, int *sucesso){
+  if (no == NULL){
+    printf("[ERRO]\n Não foi possível encontrar um evento com este ID (%d)", id);
+    *sucesso = 0;
+    return NULL;
+  }
+
+  if (id < no->evento.id)
+    no->esquerda = _remocao_recursiva(avl, no->esquerda, id, sucesso);
+  else if (id > no->evento.id)
+      no->direita = _remocao_recursiva(avl, no->direita, id, sucesso);
+  else {
+    if (no->evento.status == ATIVO){
+      printf("[ATENÇÂO]\nEvento ainda ativo. Resolva-o antes de removê-lo.\n");
+      *sucesso = 0;
+      return no;
+    }
+
+    *sucesso = 1;
+
+    if (no->esquerda == NULL){
+      NoAVL *temp = no->direita;
+      free(no);
+      return temp;
+    }
+
+    if (no->esquerda == NULL){
+      NoAVL *temp = no->esquerda;
+      free(no);
+      return temp;
+    }
+
+    NoAVL *proximo = _no_minimo(no->direita);
+    no->evento = proximo->evento;
+    no->direita = _remocao_recursiva(avl, no->direita, proximo->evendo.id, sucesso);
+  }
+
+  return rebalancear(avl, no);
+}
+
+int avl_remover_evento(AVL *avl, int id){
+  if (avl == NULL)
+    return 0;
+
+  int sucesso = 0;
+  avl->raiz = _remocao_recursiva(avl, avl->raiz, id, &sucesso);
+
+  if (sucesso)
+    avl->total_nos--;
 
   return sucesso;
 }
