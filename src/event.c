@@ -221,6 +221,102 @@ const char *tipo_p_string(TipoEvento tipo) {
     }
 }
 
+/* ---------------------------------------------------------
+ * magnitude_por_tipo
+ * Retorna a magnitude padrão de um tipo de evento.
+ * Elimina a necessidade de entrada manual da magnitude
+ * no cadastro, garantindo consistência nos dados.
+ * --------------------------------------------------------- */
+int magnitude_por_tipo(TipoEvento tipo) {
+  switch (tipo) {
+
+  // magnitude 1
+  case ACIDENTE_DE_TRANSITO_SEM_VITIMAS:
+  case SEMAFORO_INTERMITENTE:
+  case BUEIRO_ABERTO:
+  case QUEIMA_DE_LIXO_OU_MATO:
+  case VENTANIA:
+  case FURTO:
+  case ASSALTO_A_TRANSEUNTES:
+    return 1;
+
+  // magnitude 2
+  case ACIDENTE_DE_TRANSITO_COM_VITIMA_LEVE:
+  case SEMAFORO_INOPERANTE:
+  case QUEDA_DE_POSTE_ILUMINACAO:
+  case ALAGAMENTO_BAIRRO_RESIDENCIAL:
+  case ALAGAMENTO_CENTRO_COMERCIAL:
+  case QUEDA_DE_ENERGIA_BAIRRO_RESIDENCIAL:
+  case QUEDA_DE_ENERGIA_CENTRO_COMERCIAL:
+  case VENDAVAL:
+  case CHUVA_DE_GRANIZO:
+  case TEMPESTADE_MEDIA:
+    return 2;
+
+  // magnitude 3
+  case VAZAMENTO_DE_GAS_EM_AREA_DENSAMENTE_POVOADA:
+  case ARRASTAO:
+  case GALERIA_PLUVIAL_TRANSBORDANDO:
+  case INCENDIO_FLORESTAL:
+  case ACIDENTE_DE_TRANSITO_COM_VITIMA_GRAVE:
+  case ENGAVETAMENTO_NA_VIA_EXPRESSA:
+  case ATROPELAMENTO_DE_PEDESTRE:
+  case QUEDA_DE_ENERGIA_AREA_INDUSTRIAL:
+  case ALAGAMENTO_ZONA_INDUSTRIAL:
+  case INCENDIO_EM_EDIFICIO_RESIDENCIAL:
+  case INCENDIO_EM_REGIAO_PERIFERICA:
+  case INCENDIO_EM_INSTITUICAO_DE_ENSINO:
+  case TEMPESTADE_SEVERA:
+  case ONDA_DE_CALOR_EXTREMO:
+  case ONDA_DE_FRIO_EXTREMO:
+  case ENCHENTE:
+  case ASSALTO_AO_BANCO:
+  case SEQUESTRO_DE_TRANSEUNTE:
+  case EXPLOSAO_DE_POSTO_DE_COMBUSTIVEL:
+  case SURTO_DE_DOENCA:
+  case VEICULO_EM_CHAMAS_NA_PISTA:
+  case EXPLOSAO_DE_TRANSFORMADOR:
+    return 3;
+
+  // magnitude 4
+  case DESABAMENTO_DE_PREDIO_RESIDENCIAL:
+  case DESABAMENTO_DE_PREDIO_COMERCIAL:
+  case VAZAMENTO_QUIMICO_ZONA_INDUSTRIAL:
+  case TIROTEIO_EM_VIA_PUBLICA:
+  case DESLIZAMENTO_DE_TERRA_EM_COMUNIDADE:
+  case CONTAMINACAO_DE_AGUA_POTAVEL:
+  case QUEDA_DE_ENERGIA_EM_HOSPITAL:
+  case INCENDIO_EM_PLANTA_INDUSTRIAL:
+  case INCENDIO_EM_SHOPPING_CENTER:
+  case INCENDIO_EM_PREDIO_PUBLICO:
+  case INCENDIO_EM_EDICIO_COMERCIAL:
+  case CICLONE;
+  case TEMPESTADE_CRITICA:
+  case NEVASCA:
+  case SEQUESTRO_DE_ONIBUS:
+  case INVASAO_ARMADA_A_EDIFICIO:
+  case CONFRONTO_DE_FACCOES:
+  case DESABAMENTO_DE_INSTUICAO_DE_ENSINO:
+  case DESABAMENTO_DE_PLANTA_INDUSTRIAL:
+  case COLAPSO_DE_VIADUTO:
+  case BLECAUTE_TOTAL:
+    return 4;
+
+  // magnitude 5
+  case BOMBA_EM_VIA_PUBLICA:
+  case TORNADO:
+  case INCENDIO_EM_MASSA:
+  case TIROTEIO_ESCOLAR:
+  case SEQUESTRO_DE_AVIAO:
+  case ROMPIMENTO_DE_BARRAGEM:
+  case TERREMOTO:
+    return 5;
+
+  default:
+    return MAGNITUDE_MIN;
+  }
+}
+
 const char *status_p_string(StatusEvento status){
   switch(status){
     case ATIVO:
