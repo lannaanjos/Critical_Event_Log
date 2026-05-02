@@ -258,3 +258,52 @@ int valida_datahora(const DataHora *dh){
 
   return 1;
 }
+
+void datahora_p_string(const DataHora *dh, char *buffer, int tam_buffer){
+  if (dh == NULL || buffer == NULL || tam_buffer < 20){
+    return;
+  }
+
+  snprintf(buffer, tam_buffer, "%02d/%02d/%04d %02d:%02d:%02d",
+           dh->dia, dh->mes, dh->ano,
+           dh->hora, dh->minuto, dh->segundo);
+}
+
+int valida_evento(const Evento *e){
+  if (e == NULL)
+    return 0;
+
+  if (e->id <= 0)
+    return 0;
+
+  if (e->magnitude < MAGNITUDE_MIN || e->magnitude > MAGNITUDE_MAX)
+    return 0;
+
+  if (!valida_datahora(&e->timestamp))
+    return 0;
+
+  if (strlen(e->regiao) == 0)
+    return 0;
+
+  if (e->status != ATIVO && e->status != RESOLVIDO)
+    return 0;
+
+  return 1;
+}
+
+void exibe_evento(const Evento *e){
+  if (e == NULL){
+    printf("Evento inválido\n");
+    return;
+  }
+
+  char bff_timestamp[20];
+  datahora_p_string(&e->timestamp, bff_timestamp, sizeof(bff_timestamp));
+
+  printf("ID          | %-5d \n", e->id);
+  printf("Tipo        | %-31s \n", tipo_p_string(e->tipo));
+  printf("Magnitude   | %d/5%-28s \n", e->magnitude;
+  printf("Data e Hora | %-31s\n", bff_timestamp);
+  printf("Região      | %-31s\n", e->regiao);
+  printf("Status      | %-31s\n", status_p_string(e->status));
+}
