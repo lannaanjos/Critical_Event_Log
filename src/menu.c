@@ -32,3 +32,16 @@ void ler_string(const char *instruction, char *buffer, int tam){
       buffer[len - 1] = '\0';
   }
 }
+
+void limpa_tela(void){
+  #ifdef _WIN32
+    system("cls");
+  #else
+    system("clear");
+  #endif
+}
+
+void pausa(void){
+  printf("Pressione Enter para continuar...");
+  while(getchar() != '\n');
+}
