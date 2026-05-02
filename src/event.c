@@ -293,7 +293,7 @@ int valida_evento(const Evento *e){
 
 void exibe_evento(const Evento *e){
   if (e == NULL){
-    printf("Evento inválido\n");
+    printf("[ERRO]\nEvento inválido\n");
     return;
   }
 
