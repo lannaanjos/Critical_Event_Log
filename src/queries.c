@@ -76,7 +76,49 @@ int query_ativos_por_regiao(AVL *avl, const char *regiao){
   if (total == 0)
     printf("Nenhum evento foi encontrado\n");
   else
-    printf("Total de eventos encontrados: %d", total);
+    printf("Total de %d eventos encontrados.\n", total);
+
+  return total;
+}
+
+// /\/\/\ por intervalo de id
+static int _query_intervalo_id_rec(NoAvl *no, int id_min, int id_max){
+  if (no == NULL)
+    return 0;
+
+  int count = 0;
+
+  if (no->evento.id > id_min)
+    count += _query_intervalo_id_rec(no->esquerda, id_min, id_max);
+
+  if (no->evento.id >= id_min && no->evento.id <= id_max){
+    exibe_evento(&no->evento);
+    count++;
+  }
+
+  if (no->evento.id < id_max)
+    count += _query_intervalo_id_rec(no->direita, id_min, id_max);
+
+  return count;
+}
+
+int query_eventos_por_intervalo_id(AVL *avl, int id_min, int id_max){
+  if (avl == NULL)
+    return 0;
+
+  if (id_min <= 0 || id_max <= 0 || id_min > id_max){
+    printf("[ERRO]\nIntervalo de ID inválido!\n")
+      return 0;
+  }
+
+  printf("Eventos | ID %d - %d", id_min, id_max);
+
+  int total = _query_intervalo_id_rec(avl->raiz, id_min, id_max);
+
+  if (total == 0)
+    printf("Nenhum evento foi encontrado\n");
+  else
+    printf("Total de %d eventos encontrados\n", total);
 
   return total;
 }
