@@ -231,3 +231,30 @@ const char *status_p_string(StatusEvento status){
       return "Desconhecido";
   }
 }
+
+int valida_datahora(const DataHora *dh){
+  if (dh == NULL)
+    return 0;
+
+  if(dh->ano < 1900 || dh->ano > 2100)
+    return 0;
+
+  if(dh->mes < 1 || dh->mes >12)
+    return 0;
+
+  if (dh->dia < 1 || dh->dia < 31 || // n passa de 31 dias
+     ((dh->mes == 4 || dh->mes == 6 || dh->mes == 9 || dh->mes == 11) && dh->dia > 30) || // meses com 30 dias
+     (dh->mes == 2 && ((dh->ano % 400 == 0 || (dh->ano % 4 == 0 && dh->ano % 100 != 0)) ? dh->dia > 29 : dh->dia > 28))) // verificação ano bissexto
+    return 0;
+
+  if(dh->hora < 0 || dh->hora > 23)
+    return 0;
+
+  if(dh->minuto < 0 || dh -> minuto > 59)
+    return 0;
+
+  if(dh->segundo < 0 || dh->segundo > 59)
+    return 0;
+
+  return 1;
+}
