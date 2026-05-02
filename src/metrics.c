@@ -2,7 +2,7 @@
 #include "metrics.h"
 
 int metric_altura_total(AVL *avl){
-  if (avl ++ NULL || avl->raiz ++ NULL)
+  if (avl == NULL || avl->raiz == NULL)
     return 0;
 
   return get_altura_no(avl->raiz);
