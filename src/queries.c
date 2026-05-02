@@ -42,7 +42,7 @@ int query_ativos_por_magnitude(AVL *avl, int mag_min, int mag_max){
 }
 
 // /\/\/\ POR regiao
-static int _query_regiao_recursiva(NoAvl *avl, const char *regiao){
+static int _query_regiao_recursiva(NoAvl *no, const char *regiao){
   if (avl == NULL)
     return 0;
 
@@ -102,12 +102,12 @@ static int _query_intervalo_id_rec(NoAvl *no, int id_min, int id_max){
   return count;
 }
 
-int query_eventos_por_intervalo_id(AVL *avl, int id_min, int id_max){
+int query_eventos_por_intervalo(AVL *avl, int id_min, int id_max){
   if (avl == NULL)
     return 0;
 
   if (id_min <= 0 || id_max <= 0 || id_min > id_max){
-    printf("[ERRO]\nIntervalo de ID inválido!\n")
+    printf("[ERRO]\nIntervalo de ID inválido!\n");
       return 0;
   }
 
