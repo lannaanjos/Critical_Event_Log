@@ -2,6 +2,7 @@
 #include <string.h>
 #include "queries.h"
 
+// por magnitude
 static int _query_magnitude_recursiva(NoAvl *no, int mag_min, int mag_max){
   if (no == NULL)
     return 0;
@@ -36,6 +37,46 @@ int query_ativos_por_magnitude(AVL *avl, int mag_min, int mag_max){
     printf("Nenhum evento foi encontrado\n");
   else
     printf("Total de %d eventos encontrados\n", total);
+
+  return total;
+}
+
+// /\/\/\ POR regiao
+static int _query_regiao_recursiva(NoAvl *avl, const char *regiao){
+  if (avl == NULL)
+    return 0;
+
+  int count = 0;
+
+  count += _query_regiao_recursiva(no->esquerda, regiao);
+
+  if (no->evento.status == ATIVO && strcmp(no->evento.regiao, regiao) == 0){
+    exibe_evento(&no->evento);
+    count++;
+  }
+
+  count += _query_regiao_recursiva(no->direita, regiao);
+
+  return count;
+}
+
+int query_ativos_por_regiao(AVL *avl, const char *regiao){
+  if (avl == NULL)
+    return 0;
+
+  if (regiao == NULL || strlen(regiao) == 0){
+    printf("[ERRO]\nRegião inválida!\n");
+    return 0;
+  }
+
+  printf("Eventos Ativos | Região: %s\n\n",regiao);
+
+  int total = _query_regiao_recursiva(avl->raiz, regiao);
+
+  if (total == 0)
+    printf("Nenhum evento foi encontrado\n");
+  else
+    printf("Total de eventos encontrados: %d", total);
 
   return total;
 }
