@@ -237,3 +237,20 @@ int avl_remover_evento(AVL *avl, int id){
 
   return sucesso;
 }
+
+// /\/\ busca
+NoAVL *avl_buscar_evento(AVL *avl, int id){
+  if (avl == NULL)
+    return NULL;
+
+  NoAVL *atual = avl->raiz;
+  while(atual != NULL){
+    if (id == atual->evento.id)
+      return atual;
+    else if (id < atual.evento.id)
+        atual = atual->esquerda;
+    else
+      atual = atual->direita;
+  }
+  return NULL; // n achou 
+}
