@@ -47,3 +47,61 @@ int get_fator_balanceamento(NoAVL *no){
     return 0;
   return get_altura_no(no->esquerda) - get_altura_no(no->direita);
 }
+
+void atualiza_altura(NoAVL *no){
+  if (no == NULL)
+    return;
+
+  int h_esq = get_altura_no(no->esquerda);
+  int h_dir = get_altura_no(no->direita);
+
+  no->altura = 1 + (h_esq > h_dir ? h_esq : h_dir);
+}
+
+// /\/\/\ ROTAÇÕES
+NoAVL *rotacao_direita(AVL *avl, NoAVL *y){
+  NoAVL *x = y->esquerda;
+  NoAVL filho_dir = x->direita;
+
+  // rot
+  x->direita = y;
+  y->esquerda = filho_dir;
+
+  // att altura
+  atualiza_altura(y);
+  atualiza_altura(x);
+
+  avl->total_rotacoes++;
+  return x; // nova raiz da subtree 
+}
+
+NoAVL *rotacao_esquerda(AVL *avl, NoAVL *x){
+  NoAVL *y = x->direita;
+  NoAVL filho_esq = y->esquerda;
+
+  // rot
+  y->esquerda = x;
+  x->direita = filho_esq;
+
+  // att altura
+  atualiza_altura(x);
+  atualiza_altura(y);
+
+  avl->total_rotacoes++;
+  return y;
+}
+
+NoAVL *rot_dupla_esq_dir(AVL *avl, NoAVL *no){
+  no->esquerda = rotacao_esquerda(avl, no->esquerda);
+  return rotacao_direita(avl, no);
+}
+
+NoAVL *rot_dupla_dir_esq(AVL *avl, NoAVL *no){
+  no->direita = rotacao_direita(avl, no->direita);
+  return rotacao_esquerda(avl, no);
+}
+
+// /\ rebalanceamento
+NoAVL *rebalancear(AVL *avl, NoAVL *no){
+  atualiza_altura(no);
+}
