@@ -167,8 +167,238 @@ static DataHora _let_datahora(void){
   dh.mes = ler_int("  Mês     (1-12): ", 1, 12);
   dh.ano = ler_int("  Ano     (1900 - 2100): ", 1900, 2100);
   dh.hora = ler_int("  Hora    (0-23): ", 0, 23);
-  dh.mimuto = ler_int("  Minuto  (0-59): ", 0, 59);
-  dh.segundo = ler_int("  Segundo (0-59): ", 0, 50);
+  dh.minuto = ler_int("  Minuto  (0-59): ", 0, 59);
+  dh.segundo = ler_int("  Segundo (0-59): ", 0, 59);
 
   return dh;
+}
+
+
+// /\/\/\ SUBMENU CADASTRO
+void menu_cadastro_evento(AVL *avl){
+  int opcao;
+
+  do {
+    limpa_tela();
+    printf("  CADASTRO DE EVENTOS\n\n");
+    printf("[1] Inserir novo evento\n");
+    printf("[2] Remover evento resolvido\n");
+    printf("[0] Voltar\n");
+
+    opcao = ler_int("Opção: ", 0, 2);
+
+    if (opcao == 1){
+      limpa_tela();
+      printf("  INSERIR NOVO EVENTO\n\n");
+
+      Evento e;
+      e.id = ler_int("ID do evento: ", 1, 999999);
+      e.magnitude = magnitude_por_tipo(e, tipo);
+      e.timestamp = _let_datahora();
+      ler_string("Região da cidade: ", e.regiao. TAM_MAX_NOME_REGIAO);
+      e.status = ATIVO;
+
+      printf("\n\nConfirmar cadastro?\n");
+      exibe_evento(&e);
+      int confirma = ler_int("[1] SIM\n[0] NÂO", 0, 1);
+
+      if (confirma){
+        if (avl_inserir_evento(avl, e))
+          printf("\n[SUCESSO]\nEvento de ID %d foi inserido na árvore!", e.id);
+      } else {
+        printf("\n[CANCELADO]\nCadastro interrompido!");
+      }
+
+      pausa();
+
+    } else if (opcao == 2){
+      limpa_tela();
+      printf("  REMOVER EVENTO RESOLVIDO\n\n");
+
+      int id = ler_int("ID do evento a ser remnovido: ", 1, 999999);
+
+      NoAVL *no = avl_buscar_evento(avl, id);
+      if (no != NULL){
+          exibe_evento(&no->evento);
+        int confirma = ler_int("\nConfirmar remoção? [1] SIM [0] NÃO: ", 0, 1);
+        if (confirma){
+          if (avl_remover_evento(avl, id))
+            printf("\n[SUCESSO]\nEvento de ID %d removido da árvore!\n", id);
+        } else {
+          printf("\n[CANCELADO]\nRemoção interrompida!\n");
+        }
+      } else {
+        printf("\n[ERRO]\nEvento com ID %d não encontrado!", id);
+      }
+      
+      pausa();
+
+    }
+  } while (opcao != 0);
+}
+
+
+void menu_consulta(AVL *avl){
+  int opcao;
+ 
+  do {
+    limpa_tela();
+    printf("  CONSULTAS\n\n");
+    printf("[1] Eventos ativos por intervalo de magnitude\n");
+    printf("[2] Eventos ativos por regiao\n");
+    printf("[3] Eventos por intervalo de ID\n");
+    printf("[0] Voltar\n\n");
+ 
+    opcao = ler_int("Opcao: ", 0, 3);
+ 
+    if (opcao == 1){
+      limpa_tela();
+      printf("  ATIVOS POR MAGNITUDE\n\n");
+      int mag_min = ler_int("Magnitude minima (1-5): ", MAGNITUDE_MIN, MAGNITUDE_MAX);
+      int mag_max = ler_int("Magnitude maxima (1-5): ", mag_min, MAGNITUDE_MAX);
+      query_ativos_por_magnitude(avl, mag_min, mag_max);
+      pausa();
+ 
+    } else if (opcao == 2){
+      limpa_tela();
+      printf("  ATIVOS POR REGIAO\n\n");
+      char regiao[TAM_MAX_NOME_REGIAO];
+      ler_string("Nome da regiao: ", regiao, TAM_MAX_NOME_REGIAO);
+      query_ativos_por_regiao(avl, regiao);
+      pausa();
+ 
+    } else if (opcao == 3){
+      limpa_tela();
+      printf("  EVENTOS POR INTERVALO DE ID\n\n");
+      int id_min = ler_int("ID minimo: ", 1, 999999);
+      int id_max = ler_int("ID maximo: ", id_min, 999999);
+      query_eventos_por_intervalo_id(avl, id_min, id_max);
+      pausa();
+    }
+ 
+  } while (opcao != 0);
+}
+
+void menu_atualizacoes(AVL *avl){
+  int opcao;
+ 
+  do {
+    limpa_tela();
+    printf("  ATUALIZAÇÕES\n\n");
+    printf("[1] Alterar status do evento\n");
+    printf("[2] Alterar magnitude do evento\n");
+    printf("[0] Voltar\n\n");
+ 
+    opcao = ler_int("Opção: ", 0, 2);
+ 
+    if (opcao == 1){
+      limpa_tela();
+      printf("  ALTERAR STATUS\n\n");
+ 
+      int id = ler_int("ID do evento: ", 1, 999999);
+ 
+      NoAVL *no = avl_buscar_evento(avl, id);
+      if (no == NULL){
+        printf("\n[ERRO]\nEvento com ID %d não encontrado.\n", id);
+      } else {
+        exibe_evento(&no->evento);
+        printf("Novo status:\n  [0] Ativo\n  [1] Resolvido\n");
+        int s = ler_int("Opção: ", 0, 1);
+        if (avl_atualizar_status(avl, id, (StatusEvento)s))
+          printf("\n[SUCESSO]\nStatus do evento ID %d atualizado!\n", id);
+      }
+      pausa();
+ 
+    } else if (opcao == 2){
+      limpa_tela();
+      printf("  ALTERAR MAGNITUDE\n\n");
+ 
+      int id = ler_int("ID do evento      : ", 1, 999999);
+ 
+      NoAVL *no = avl_buscar_evento(avl, id);
+      if (no == NULL){
+        printf("\n[ERRO]\nEvento com ID %d não encontrado.\n", id);
+      } else {
+        exibe_evento(&no->evento);
+        int mag = ler_int("Nova magnitude (1-5): ", MAGNITUDE_MIN, MAGNITUDE_MAX);
+        if (avl_atualizar_magnitude(avl, id, mag))
+          printf("\n[SUCESSO]\nMagnitude do evento ID %d atualizada!\n", id);
+      }
+      pausa();
+    }
+ 
+  } while (opcao != 0);
+}
+
+void menu_relatorio(AVL *avl){
+  int opcao;
+ 
+  do {
+    limpa_tela();
+    printf("  RELATORIOS E METRICAS\n\n");
+    printf("[1] Buscar evento por ID\n");
+    printf("[2] Metricas da arvore\n");
+    printf("[0] Voltar\n\n");
+ 
+    opcao = ler_int("Opcao: ", 0, 2);
+ 
+    if (opcao == 1){
+      limpa_tela();
+      printf("  BUSCAR EVENTO POR ID\n\n");
+ 
+      int id = ler_int("ID do evento: ", 1, 999999);
+      NoAVL *no = avl_buscar_evento(avl, id);
+ 
+      if (no != NULL){
+        printf("\n  Evento encontrado:\n");
+        exibe_evento(&no->evento);
+      } else {
+        printf("\n[ERRO]\nEvento com ID %d não encontrado.\n", id);
+      }
+      pausa();
+ 
+    } else if (opcao == 2){
+      limpa_tela();
+      metric_exibir_relatorio(avl);
+      pausa();
+    }
+ 
+  } while (opcao != 0);
+}
+
+// /\/\/\ MENU PRINCIPAL
+void menu_principal(AVL *avl){
+  int opcao;
+
+  do {
+    limpa_tela();
+    printf("  SISTEMA DE EVENTOS CRÍTICOS\n");
+    printf("=-=-=-= Menu Principal =-=-=-=\n");
+    printf("[1] Cadastro de eventos\n");
+    printf("[2] Consultas\n");
+    printf("[3] Atualizações\n");
+    printf("[4] Relatórios e Métricas\n");
+    printf("[0] Sair\n\n");
+
+    opcao = ler_int("Opção: ", 0, 4);
+
+    switch(opcao){
+      case 1:
+        menu_cadastro_evento(avl);
+        break;
+      case 2:
+        menu_consulta(avl);
+        break;
+      case 3:
+        menu_atualizacoes(avl);
+        break;
+      case 4:
+        menu_relatorio(avl);
+        break;
+      case 0:
+        printf("Encerrando...\n");
+        break;
+    }
+
+  } while(opcao != 0);
 }
