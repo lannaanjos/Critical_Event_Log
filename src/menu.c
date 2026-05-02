@@ -133,3 +133,42 @@ static void _exibir_tipos_evento(void) {
   printf("  64 - Surto de Doenca\n");
   printf("  65 - Contaminacao de Agua Potavel\n\n");
 }
+
+static int _tipo_evento_valido(int valor){
+  if (valor == 66) // pq esse ta n sequencial
+    return 1;
+  if (valor >= 0 && valor <= 65)
+    return 1;
+
+  return 0; // invalido 
+}
+
+static TipoEvento _let_tipo_evento(void){
+  _exibir_tipos_evento();
+  int valor;
+
+  do {
+    printf("Insira código do tipo de evento: ");
+    if (scanf("%d", &valor) != 1)
+      valor = -1;
+    while (getchar() != '\n');
+    if(!_tipo_evento_valido(valor))
+      printf("[ERRO]\nCódigo inválido! Tente novamente.");
+  } while(!_tipo_evento_valido(valor));
+
+  return (TipoEvento)valor;
+}
+
+static DataHora _let_datahora(void){
+  DataHora dh;
+
+  printf("Data e Hora do Evento\n\n");
+  dh.dia = ler_int("  Dia     (1-31): ", 1, 31);
+  dh.mes = ler_int("  Mês     (1-12): ", 1, 12);
+  dh.ano = ler_int("  Ano     (1900 - 2100): ", 1900, 2100);
+  dh.hora = ler_int("  Hora    (0-23): ", 0, 23);
+  dh.mimuto = ler_int("  Minuto  (0-59): ", 0, 59);
+  dh.segundo = ler_int("  Segundo (0-59): ", 0, 50);
+
+  return dh;
+}
