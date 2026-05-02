@@ -61,7 +61,7 @@ void atualiza_altura(NoAVL *no){
 // /\/\/\ ROTAÇÕES
 NoAVL *rotacao_direita(AVL *avl, NoAVL *y){
   NoAVL *x = y->esquerda;
-  NoAVL filho_dir = x->direita;
+  NoAVL *filho_dir = x->direita;
 
   // rot
   x->direita = y;
@@ -77,7 +77,7 @@ NoAVL *rotacao_direita(AVL *avl, NoAVL *y){
 
 NoAVL *rotacao_esquerda(AVL *avl, NoAVL *x){
   NoAVL *y = x->direita;
-  NoAVL filho_esq = y->esquerda;
+  NoAVL *filho_esq = y->esquerda;
 
   // rot
   y->esquerda = x;
@@ -143,7 +143,7 @@ static NoAVL *_insercao_recursiva(AVL *avl, NoAVL *no, Evento evento, int *suces
 
   if (evento.id < no->evento.id)
     no->esquerda = _insercao_recursiva(avl, no->esquerda, evento, sucesso);
-  else if (evento.id . no->evento.id)
+  else if (evento.id > no->evento.id)
       no->direita = _insercao_recursiva(avl, no->direita, evento, sucesso);
   else {
     printf("[ATENÇÃO]\nJá existe um evento com este ID (%d) na árvore!\n", evento.id);
@@ -211,7 +211,7 @@ static NoAVL *_remocao_recursiva(AVL *avl, NoAVL *no, int id, int *sucesso){
       return temp;
     }
 
-    if (no->esquerda == NULL){
+    if (no->direita == NULL){
       NoAVL *temp = no->esquerda;
       free(no);
       return temp;
@@ -219,7 +219,7 @@ static NoAVL *_remocao_recursiva(AVL *avl, NoAVL *no, int id, int *sucesso){
 
     NoAVL *proximo = _no_minimo(no->direita);
     no->evento = proximo->evento;
-    no->direita = _remocao_recursiva(avl, no->direita, proximo->evendo.id, sucesso);
+    no->direita = _remocao_recursiva(avl, no->direita, proximo->evento.id, sucesso);
   }
 
   return rebalancear(avl, no);
@@ -247,7 +247,7 @@ NoAVL *avl_buscar_evento(AVL *avl, int id){
   while(atual != NULL){
     if (id == atual->evento.id)
       return atual;
-    else if (id < atual.evento.id)
+    else if (id < atual->evento.id)
         atual = atual->esquerda;
     else
       atual = atual->direita;
@@ -256,7 +256,7 @@ NoAVL *avl_buscar_evento(AVL *avl, int id){
 }
 
 // /\/\ ops de atualização
-int avl_atualizar_status(AVL *avl, int it, StatusEvento novo_status){
+int avl_atualizar_status(AVL *avl, int id, StatusEvento novo_status){
   if (avl == NULL)
     return 0;
 
@@ -274,14 +274,14 @@ int avl_atualizar_status(AVL *avl, int it, StatusEvento novo_status){
 
   if (novo_status == ATIVO)
     avl->total_ativos++;
-  else if (novo == RESOLVIDO)
+  else if (novo_status == RESOLVIDO)
       avl->total_ativos--;
 
   no->evento.status = novo_status;
   return 1;
 }
 
-int avl_atualizar_magnitude(AVL *avl, int id, nova_magnitude){
+int avl_atualizar_magnitude(AVL *avl, int id, int nova_magnitude){
   if (avl == NULL)
     return 0;
 
