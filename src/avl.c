@@ -104,4 +104,22 @@ NoAVL *rot_dupla_dir_esq(AVL *avl, NoAVL *no){
 // /\ rebalanceamento
 NoAVL *rebalancear(AVL *avl, NoAVL *no){
   atualiza_altura(no);
+  int fb = get_fator_balanceamento(no);
+
+  // esquerda esquerda
+  if (fb > 1 && get_fator_balanceamento(no->esquerda) >= 0)
+    return rotacao_direita(avl, no);
+
+  // esquerda direita
+  if (fb > 1 && get_fator_balanceamento(no->esquerda) < 0)
+    return rot_dupla_esq_dir(avl, no);
+
+  // direita direita
+  if (fb < -1 && get_fator_balanceamento(no->direita) <= 0)
+    return rotacao_esquerda(avl, no);
+
+  if (fb < -1 && get_fator_balanceamento(no->direita) > 0)
+    return rot_dupla_dir_esq(avl, no);
+
+  return no; // balanceado 
 }
