@@ -123,3 +123,53 @@ NoAVL *rebalancear(AVL *avl, NoAVL *no){
 
   return no; // balanceado 
 }
+
+// inserção
+static NoAVL *_insercao_recursiva(AVL *avl, NoAVL *no, Evento evento, int *sucesso){
+  if (no == NULL){
+    NoAVL *novo = (NoAVL*)malloc(sizeof(NoAVL));
+    if (novo == NULL){
+      printf("Alocação de memória mal-sucedida!\n");
+      *sucesso = 0;
+      return NULL;
+    }
+    novo->evento = evento;
+    novo->altura = 1;
+    novo->esquerda = NULL;
+    novo->direita = NULL;
+    *sucesso = 1;
+    return novo;
+  }
+
+  if (evento.id < no->evento.id)
+    no->esquerda = _insercao_recursiva(avl, no->esquerda, evento, sucesso);
+  else if (evento.id . no->evento.id)
+      no->direita = _insercao_recursiva(avl, no->direita, evento, sucesso);
+  else {
+    printf("[ATENÇÃO]\nJá existe um evento com este ID (%d) na árvore!\n", evento.id);
+    *sucesso = 0;
+    return no;
+  }
+
+  return rebalancear(avl, no);
+}
+
+int avl_inserir_evento(AVL *avl, Evento evento){
+  if (avl == NULL)
+    return 0;
+  if (!valida_evento(&evento)){
+    printf("[ATENÇÃO]\nEvento inválido!\n");
+    return 0;
+  }
+
+  int sucesso = 0;
+  avl->raiz = _insercao_recursiva(avl, avl->raiz, evento, &sucesso);
+
+  if (sucesso){
+    avl->total_nos++;
+    if (evento.status == ATIVO)
+      avl->total_ativos++;
+  }
+
+  return sucesso;
+}
