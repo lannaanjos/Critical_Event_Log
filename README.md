@@ -65,4 +65,4 @@ cidade_inteligente/
 **`menu`** — Interface textual interativa com submenus organizados, validação de todas as entradas e confirmação antes de operações destrutivas.
 
 ### Desenvolvido por
-Lanna dos Anjos Costa 
+Lanna dos Anjos Costa, 2026 
