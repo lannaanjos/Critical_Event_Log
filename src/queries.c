@@ -30,7 +30,7 @@ int query_ativos_por_magnitude(AVL *avl, int mag_min, int mag_max){
     return 0;
   }
 
-  printf("Eventos Ativos | Magnitude %d - %d\n\n", mag_min, mag_max);
+  printf("Eventos Ativos | Magnitude %d - %d\n", mag_min, mag_max);
   int total = _query_magnitude_recursiva(avl->raiz, mag_min, mag_max);
 
   if (total == 0)
@@ -69,7 +69,7 @@ int query_ativos_por_regiao(AVL *avl, const char *regiao){
     return 0;
   }
 
-  printf("Eventos Ativos | Região: %s\n\n",regiao);
+  printf("Eventos Ativos | Região: %s\n",regiao);
 
   int total = _query_regiao_recursiva(avl->raiz, regiao);
 
@@ -107,11 +107,11 @@ int query_eventos_por_intervalo(AVL *avl, int id_min, int id_max){
     return 0;
 
   if (id_min <= 0 || id_max <= 0 || id_min > id_max){
-    printf("[ERRO]\nIntervalo de ID inválido!\n");
+    printf("\n[ERRO]\nIntervalo de ID inválido!\n");
       return 0;
   }
 
-  printf("Eventos | ID %d - %d", id_min, id_max);
+  printf("Eventos | ID %d - %d\n", id_min, id_max);
 
   int total = _query_intervalo_id_rec(avl->raiz, id_min, id_max);
 

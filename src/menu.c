@@ -13,7 +13,7 @@ int ler_int(const char *instruction, int min, int max){
     if (scanf("%d", &valor) == 1 && valor >= min && valor <= max){
       valido = 1;
     } else {
-      printf("[ERRO]\nEntrada inválida! Informe um número entre %d e %d.", min, max);
+      printf("\n[ERRO]\nEntrada inválida! Informe um número entre %d e %d.", min, max);
     }
 
     while(getchar() != '\n'); // limpa buffer
@@ -41,7 +41,7 @@ void limpa_tela(void){
 }
 
 void pausa(void){
-  printf("Pressione Enter para continuar...");
+  printf("\nPressione Enter para continuar...");
   while(getchar() != '\n');
 }
 
@@ -152,7 +152,7 @@ static TipoEvento _ler_tipo_evento(void){
       valor = -1;
     while (getchar() != '\n');
     if(!_tipo_evento_valido(valor))
-      printf("[ERRO]\nCódigo inválido! Tente novamente.");
+      printf("\n[ERRO]\nCódigo inválido! Tente novamente.");
   } while(!_tipo_evento_valido(valor));
 
   return (TipoEvento)valor;
@@ -179,7 +179,7 @@ void menu_cadastro_evento(AVL *avl){
 
   do {
     limpa_tela();
-    printf("  CADASTRO DE EVENTOS\n\n");
+    printf("  CADASTRO DE EVENTOS\n");
     printf("[1] Inserir novo evento\n");
     printf("[2] Remover evento resolvido\n");
     printf("[0] Voltar\n");
@@ -196,12 +196,11 @@ void menu_cadastro_evento(AVL *avl){
       e.magnitude = magnitude_por_tipo(e.tipo);
       e.timestamp = _ler_datahora();
       ler_string("Região da cidade: ", e.regiao, TAM_MAX_NOME_REGIAO);
-      printf("DEBUG regiao: '%s' len=%d\n", e.regiao, (int)strlen(e.regiao));
       e.status = ATIVO;
 
-      printf("\n\nConfirmar cadastro?\n");
+      printf("\nConfirmar cadastro?\n");
       exibe_evento(&e);
-      int confirma = ler_int("[1] SIM\n[0] NÃO\n", 0, 1);
+      int confirma = ler_int("[1] SIM [0] NÃO: ", 0, 1);
 
       if (confirma){
         if (avl_inserir_evento(avl, e))
@@ -244,17 +243,17 @@ void menu_consulta(AVL *avl){
  
   do {
     limpa_tela();
-    printf("  CONSULTAS\n\n");
+    printf("  CONSULTAS\n");
     printf("[1] Eventos ativos por intervalo de magnitude\n");
     printf("[2] Eventos ativos por regiao\n");
     printf("[3] Eventos por intervalo de ID\n");
-    printf("[0] Voltar\n\n");
+    printf("[0] Voltar\n");
  
     opcao = ler_int("Opcao: ", 0, 3);
  
     if (opcao == 1){
       limpa_tela();
-      printf("  ATIVOS POR MAGNITUDE\n\n");
+      printf("  ATIVOS POR MAGNITUDE\n");
       int mag_min = ler_int("Magnitude minima (1-5): ", MAGNITUDE_MIN, MAGNITUDE_MAX);
       int mag_max = ler_int("Magnitude maxima (1-5): ", mag_min, MAGNITUDE_MAX);
       query_ativos_por_magnitude(avl, mag_min, mag_max);
@@ -262,15 +261,15 @@ void menu_consulta(AVL *avl){
  
     } else if (opcao == 2){
       limpa_tela();
-      printf("  ATIVOS POR REGIAO\n\n");
+      printf("  ATIVOS POR REGIAO\n");
       char regiao[TAM_MAX_NOME_REGIAO];
-      ler_string("Nome da regiao: ", regiao, TAM_MAX_NOME_REGIAO);
+      ler_string("Nome da região: ", regiao, TAM_MAX_NOME_REGIAO);
       query_ativos_por_regiao(avl, regiao);
       pausa();
  
     } else if (opcao == 3){
       limpa_tela();
-      printf("  EVENTOS POR INTERVALO DE ID\n\n");
+      printf("  EVENTOS POR INTERVALO DE ID\n");
       int id_min = ler_int("ID minimo: ", 1, 999999);
       int id_max = ler_int("ID maximo: ", id_min, 999999);
       query_eventos_por_intervalo(avl, id_min, id_max);
@@ -285,16 +284,16 @@ void menu_atualizacoes(AVL *avl){
  
   do {
     limpa_tela();
-    printf("  ATUALIZAÇÕES\n\n");
+    printf("  ATUALIZAÇÕES\n");
     printf("[1] Alterar status do evento\n");
     printf("[2] Alterar magnitude do evento\n");
-    printf("[0] Voltar\n\n");
+    printf("[0] Voltar\n");
  
     opcao = ler_int("Opção: ", 0, 2);
  
     if (opcao == 1){
       limpa_tela();
-      printf("  ALTERAR STATUS\n\n");
+      printf("  ALTERAR STATUS\n");
  
       int id = ler_int("ID do evento: ", 1, 999999);
  
@@ -312,7 +311,7 @@ void menu_atualizacoes(AVL *avl){
  
     } else if (opcao == 2){
       limpa_tela();
-      printf("  ALTERAR MAGNITUDE\n\n");
+      printf("  ALTERAR MAGNITUDE\n");
  
       int id = ler_int("ID do evento      : ", 1, 999999);
  
@@ -336,16 +335,16 @@ void menu_relatorio(AVL *avl){
  
   do {
     limpa_tela();
-    printf("  RELATORIOS E METRICAS\n\n");
+    printf("  RELATORIOS E METRICAS\n");
     printf("[1] Buscar evento por ID\n");
     printf("[2] Metricas da arvore\n");
-    printf("[0] Voltar\n\n");
+    printf("[0] Voltar\n");
  
     opcao = ler_int("Opcao: ", 0, 2);
  
     if (opcao == 1){
       limpa_tela();
-      printf("  BUSCAR EVENTO POR ID\n\n");
+      printf("  BUSCAR EVENTO POR ID\n");
  
       int id = ler_int("ID do evento: ", 1, 999999);
       NoAVL *no = avl_buscar_evento(avl, id);
@@ -379,7 +378,7 @@ void menu_principal(AVL *avl){
     printf("[2] Consultas\n");
     printf("[3] Atualizações\n");
     printf("[4] Relatórios e Métricas\n");
-    printf("[0] Sair\n\n");
+    printf("[0] Sair\n");
 
     opcao = ler_int("Opção: ", 0, 4);
 
