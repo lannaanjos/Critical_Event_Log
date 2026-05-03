@@ -398,7 +398,7 @@ void exibe_evento(const Evento *e){
 
   printf("ID          | %-5d \n", e->id);
   printf("Tipo        | %-31s \n", tipo_p_string(e->tipo));
-  printf("Magnitude   | %d/5%-28s \n", e->magnitude;
+  printf("Magnitude   | %d/5%-28s \n", e->magnitude);
   printf("Data e Hora | %-31s\n", bff_timestamp);
   printf("Região      | %-31s\n", e->regiao);
   printf("Status      | %-31s\n", status_p_string(e->status));

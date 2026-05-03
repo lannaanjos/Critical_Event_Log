@@ -3,7 +3,7 @@
 #include "queries.h"
 
 // por magnitude
-static int _query_magnitude_recursiva(NoAvl *no, int mag_min, int mag_max){
+static int _query_magnitude_recursiva(NoAVL *no, int mag_min, int mag_max){
   if (no == NULL)
     return 0;
 
@@ -42,7 +42,7 @@ int query_ativos_por_magnitude(AVL *avl, int mag_min, int mag_max){
 }
 
 // /\/\/\ POR regiao
-static int _query_regiao_recursiva(NoAvl *no, const char *regiao){
+static int _query_regiao_recursiva(NoAVL *no, const char *regiao){
   if (avl == NULL)
     return 0;
 
@@ -82,7 +82,7 @@ int query_ativos_por_regiao(AVL *avl, const char *regiao){
 }
 
 // /\/\/\ por intervalo de id
-static int _query_intervalo_id_rec(NoAvl *no, int id_min, int id_max){
+static int _query_intervalo_id_rec(NoAVL *no, int id_min, int id_max){
   if (no == NULL)
     return 0;
 
