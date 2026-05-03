@@ -404,4 +404,5 @@ void exibe_evento(const Evento *e){
   printf("Data e Hora | %-31s\n", bff_timestamp);
   printf("Região      | %-31s\n", e->regiao);
   printf("Status      | %-31s\n", status_p_string(e->status));
+  printf("\n");
 }

@@ -272,6 +272,7 @@ void menu_consulta(AVL *avl){
       printf("  EVENTOS POR INTERVALO DE ID\n");
       int id_min = ler_int("ID minimo: ", 1, 999999);
       int id_max = ler_int("ID maximo: ", id_min, 999999);
+      printf("\n");
       query_eventos_por_intervalo(avl, id_min, id_max);
       pausa();
     }
