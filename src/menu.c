@@ -3,6 +3,12 @@
 #include <string.h>
 #include "menu.h"
 
+// descarta todos os caracteres pendentes no stdin até (e incluindo) '\n'.
+static void _limpa_buffer(void){
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF);
+}
+
 // /\/\/\ leitura e validação de entradas
 int ler_int(const char *instruction, int min, int max){
   int valor;
@@ -16,7 +22,7 @@ int ler_int(const char *instruction, int min, int max){
       printf("\n[ERRO]\nEntrada inválida! Informe um número entre %d e %d.", min, max);
     }
 
-    while(getchar() != '\n'); // limpa buffer
+    _limpa_buffer(); //limpa o '\n' e qualquer lixo restante
 
   } while(!valido);
 
@@ -24,12 +30,24 @@ int ler_int(const char *instruction, int min, int max){
 }
 
 void ler_string(const char *instruction, char *buffer, int tam){
+  int valido = 0;
+
+  do {
     printf("%s", instruction);
-    scanf(" ");
-    fgets(buffer, tam, stdin);
-    int len = strlen(buffer);
-    if (len > 0 && buffer[len-1] == '\n')
-        buffer[len - 1] = '\0';
+    if (fgets(buffer, tam, stdin) == NULL){
+      buffer[0] = '\0';
+    }
+
+    int len = (int)strlen(buffer);
+    if (len > 0 && buffer[len - 1] == '\n')
+      buffer[len - 1] = '\0';
+
+    if (strlen(buffer) == 0)
+      printf("\n[ERRO]\nEntrada não pode ser vazia. Tente novamente.\n");
+    else
+      valido = 1;
+
+  } while (!valido);
 }
 
 void limpa_tela(void){
@@ -42,7 +60,8 @@ void limpa_tela(void){
 
 void pausa(void){
   printf("\nPressione Enter para continuar...");
-  while(getchar() != '\n');
+  fflush(stdout);
+  _limpa_buffer();
 }
 
 
@@ -150,7 +169,7 @@ static TipoEvento _ler_tipo_evento(void){
     printf("Insira código do tipo de evento: ");
     if (scanf("%d", &valor) != 1)
       valor = -1;
-    while (getchar() != '\n');
+    _limpa_buffer();
     if(!_tipo_evento_valido(valor))
       printf("\n[ERRO]\nCódigo inválido! Tente novamente.\n");
   } while(!_tipo_evento_valido(valor));
