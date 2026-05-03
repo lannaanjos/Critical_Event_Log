@@ -223,7 +223,7 @@ static NoAVL *_remocao_recursiva(AVL *avl, NoAVL *no, int id, int *sucesso){
     int sucesso_interno = 0;
     no->direita = _remocao_recursiva(avl, no->direita, id_sucessor, &sucesso_interno);
     if (!sucesso_interno)
-      *sucesso = 0; // propaga falha: não decrementa total_nos no caller
+      *sucesso = 0;
   }
 
   return rebalancear(avl, no);
@@ -288,13 +288,14 @@ int avl_atualizar_status(AVL *avl, int id, StatusEvento novo_status){
     return 0;
   }
 
-  if (novo_status == ATIVO)
-    avl->total_ativos++;
-  else if (novo_status == RESOLVIDO)
-      avl->total_ativos--;
+  if (no->evento.status == ATIVO && novo_status == RESOLVIDO){
+    avl->total_ativos--;
+    no->evento.status = RESOLVIDO;
+    return 1;
+  }
 
-  no->evento.status = novo_status;
-  return 1;
+  printf("[ERRO]\nTransição de status inválida para o evento ID %d.\n", id);
+  return 0;
 }
 
 int avl_atualizar_magnitude(AVL *avl, int id, int nova_magnitude){

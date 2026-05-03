@@ -58,7 +58,7 @@ float metric_fator_balanceamento_medio(AVL *avl){
 }
 
 void metric_exibir_relatorio(AVL *avl){
-if (avl == NULL){
+  if (avl == NULL){
     printf("[ERRO]\nÁrvore inválida!\n");
     return;
   }
