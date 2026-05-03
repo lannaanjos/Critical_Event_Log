@@ -42,3 +42,5 @@ NoAVL *avl_buscar_evento(AVL *avl, int id);
 int avl_atualizar_status(AVL *avl, int id, StatusEvento novo_status);
 int avl_atualizar_magnitude(AVL *avl, int id, int nova_magnitude);
 
+#endif
+
