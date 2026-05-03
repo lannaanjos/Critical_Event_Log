@@ -24,13 +24,12 @@ int ler_int(const char *instruction, int min, int max){
 }
 
 void ler_string(const char *instruction, char *buffer, int tam){
-  printf("%s", instruction);
-  if (fgets(buffer, tam, stdin) != NULL){
-    // tira \n
+    printf("%s", instruction);
+    scanf(" ");
+    fgets(buffer, tam, stdin);
     int len = strlen(buffer);
     if (len > 0 && buffer[len-1] == '\n')
-      buffer[len - 1] = '\0';
-  }
+        buffer[len - 1] = '\0';
 }
 
 void limpa_tela(void){
@@ -189,7 +188,7 @@ void menu_cadastro_evento(AVL *avl){
 
     if (opcao == 1){
       limpa_tela();
-      printf("  INSERIR NOVO EVENTO\n\n");
+      printf("  INSERIR NOVO EVENTO\n");
 
       Evento e;
       e.id = ler_int("ID do evento: ", 1, 999999);
@@ -197,11 +196,12 @@ void menu_cadastro_evento(AVL *avl){
       e.magnitude = magnitude_por_tipo(e.tipo);
       e.timestamp = _ler_datahora();
       ler_string("Região da cidade: ", e.regiao, TAM_MAX_NOME_REGIAO);
+      printf("DEBUG regiao: '%s' len=%d\n", e.regiao, (int)strlen(e.regiao));
       e.status = ATIVO;
 
       printf("\n\nConfirmar cadastro?\n");
       exibe_evento(&e);
-      int confirma = ler_int("[1] SIM\n[0] NÂO", 0, 1);
+      int confirma = ler_int("[1] SIM\n[0] NÃO\n", 0, 1);
 
       if (confirma){
         if (avl_inserir_evento(avl, e))
@@ -214,7 +214,7 @@ void menu_cadastro_evento(AVL *avl){
 
     } else if (opcao == 2){
       limpa_tela();
-      printf("  REMOVER EVENTO RESOLVIDO\n\n");
+      printf("  REMOVER EVENTO RESOLVIDO\n");
 
       int id = ler_int("ID do evento a ser remnovido: ", 1, 999999);
 

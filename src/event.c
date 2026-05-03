@@ -338,7 +338,7 @@ int valida_datahora(const DataHora *dh){
   if(dh->mes < 1 || dh->mes >12)
     return 0;
 
-  if (dh->dia < 1 || dh->dia < 31 || // n passa de 31 dias
+  if (dh->dia < 1 || dh->dia > 31 || // n passa de 31 dias
      ((dh->mes == 4 || dh->mes == 6 || dh->mes == 9 || dh->mes == 11) && dh->dia > 30) || // meses com 30 dias
      (dh->mes == 2 && ((dh->ano % 400 == 0 || (dh->ano % 4 == 0 && dh->ano % 100 != 0)) ? dh->dia > 29 : dh->dia > 28))) // verificação ano bissexto
     return 0;
