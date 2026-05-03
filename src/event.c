@@ -290,7 +290,7 @@ int magnitude_por_tipo(TipoEvento tipo) {
   case INCENDIO_EM_SHOPPING_CENTER:
   case INCENDIO_EM_PREDIO_PUBLICO:
   case INCENDIO_EM_EDICIO_COMERCIAL:
-  case CICLONE;
+  case CICLONE:
   case TEMPESTADE_CRITICA:
   case NEVASCA:
   case SEQUESTRO_DE_ONIBUS:
