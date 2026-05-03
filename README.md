@@ -41,7 +41,7 @@ O sistema suporta 67 tipos de eventos distribuídos em 8 categorias:
 
 ### Módulos
 ```
-smart-city-events/
+cidade_inteligente/
 ├── src/
 │   ├── main.c        # Ponto de entrada
 │   ├── event.h/c     # Definições e utilitários do Evento

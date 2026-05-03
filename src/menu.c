@@ -152,7 +152,7 @@ static TipoEvento _ler_tipo_evento(void){
       valor = -1;
     while (getchar() != '\n');
     if(!_tipo_evento_valido(valor))
-      printf("\n[ERRO]\nCódigo inválido! Tente novamente.");
+      printf("\n[ERRO]\nCódigo inválido! Tente novamente.\n");
   } while(!_tipo_evento_valido(valor));
 
   return (TipoEvento)valor;
@@ -204,9 +204,9 @@ void menu_cadastro_evento(AVL *avl){
 
       if (confirma){
         if (avl_inserir_evento(avl, e))
-          printf("\n[SUCESSO]\nEvento de ID %d foi inserido na árvore!", e.id);
+          printf("\n[SUCESSO]\nEvento de ID %d foi inserido na árvore!\n", e.id);
       } else {
-        printf("\n[CANCELADO]\nCadastro interrompido!");
+        printf("\n[CANCELADO]\nCadastro interrompido!\n");
       }
 
       pausa();
@@ -215,7 +215,7 @@ void menu_cadastro_evento(AVL *avl){
       limpa_tela();
       printf("  REMOVER EVENTO RESOLVIDO\n");
 
-      int id = ler_int("ID do evento a ser remnovido: ", 1, 999999);
+      int id = ler_int("ID do evento a ser removido: ", 1, 999999);
 
       NoAVL *no = avl_buscar_evento(avl, id);
       if (no != NULL){
@@ -228,7 +228,7 @@ void menu_cadastro_evento(AVL *avl){
           printf("\n[CANCELADO]\nRemoção interrompida!\n");
         }
       } else {
-        printf("\n[ERRO]\nEvento com ID %d não encontrado!", id);
+        printf("\n[ERRO]\nEvento com ID %d não encontrado!\n", id);
       }
       
       pausa();

@@ -48,7 +48,7 @@ int get_fator_balanceamento(NoAVL *no){
   return get_altura_no(no->esquerda) - get_altura_no(no->direita);
 }
 
-void atualiza_altura(NoAVL *no){
+static void atualiza_altura(NoAVL *no){
   if (no == NULL)
     return;
 
@@ -59,7 +59,7 @@ void atualiza_altura(NoAVL *no){
 }
 
 // /\/\/\ ROTAÇÕES
-NoAVL *rotacao_direita(AVL *avl, NoAVL *y){
+static NoAVL *rotacao_direita(AVL *avl, NoAVL *y){
   NoAVL *x = y->esquerda;
   NoAVL *filho_dir = x->direita;
 
@@ -75,7 +75,7 @@ NoAVL *rotacao_direita(AVL *avl, NoAVL *y){
   return x; // nova raiz da subtree 
 }
 
-NoAVL *rotacao_esquerda(AVL *avl, NoAVL *x){
+static NoAVL *rotacao_esquerda(AVL *avl, NoAVL *x){
   NoAVL *y = x->direita;
   NoAVL *filho_esq = y->esquerda;
 
@@ -91,18 +91,18 @@ NoAVL *rotacao_esquerda(AVL *avl, NoAVL *x){
   return y;
 }
 
-NoAVL *rot_dupla_esq_dir(AVL *avl, NoAVL *no){
+static NoAVL *rot_dupla_esq_dir(AVL *avl, NoAVL *no){
   no->esquerda = rotacao_esquerda(avl, no->esquerda);
   return rotacao_direita(avl, no);
 }
 
-NoAVL *rot_dupla_dir_esq(AVL *avl, NoAVL *no){
+static NoAVL *rot_dupla_dir_esq(AVL *avl, NoAVL *no){
   no->direita = rotacao_direita(avl, no->direita);
   return rotacao_esquerda(avl, no);
 }
 
 // /\ rebalanceamento
-NoAVL *rebalancear(AVL *avl, NoAVL *no){
+static NoAVL *rebalancear(AVL *avl, NoAVL *no){
   atualiza_altura(no);
   int fb = get_fator_balanceamento(no);
 
@@ -175,7 +175,7 @@ int avl_inserir_evento(AVL *avl, Evento evento){
 }
 
 // /\ remoção
-NoAVL *_no_minimo(NoAVL *no){
+static NoAVL *_no_minimo(NoAVL *no){
   if (no == NULL)
     return NULL;
 
@@ -218,8 +218,12 @@ static NoAVL *_remocao_recursiva(AVL *avl, NoAVL *no, int id, int *sucesso){
     }
 
     NoAVL *proximo = _no_minimo(no->direita);
+    int id_sucessor = proximo->evento.id; // salva antes de sobrescrever o nó
     no->evento = proximo->evento;
-    no->direita = _remocao_recursiva(avl, no->direita, proximo->evento.id, sucesso);
+    int sucesso_interno = 0;
+    no->direita = _remocao_recursiva(avl, no->direita, id_sucessor, &sucesso_interno);
+    if (!sucesso_interno)
+      *sucesso = 0; // propaga falha: não decrementa total_nos no caller
   }
 
   return rebalancear(avl, no);
@@ -229,11 +233,18 @@ int avl_remover_evento(AVL *avl, int id){
   if (avl == NULL)
     return 0;
 
+  // verifica o status antes de remover para ajustar total_ativos
+  NoAVL *alvo = avl_buscar_evento(avl, id);
+  int era_ativo = (alvo != NULL && alvo->evento.status == ATIVO);
+
   int sucesso = 0;
   avl->raiz = _remocao_recursiva(avl, avl->raiz, id, &sucesso);
 
-  if (sucesso)
+  if (sucesso){
     avl->total_nos--;
+    if (era_ativo)
+      avl->total_ativos--;
+  }
 
   return sucesso;
 }
@@ -269,6 +280,11 @@ int avl_atualizar_status(AVL *avl, int id, StatusEvento novo_status){
 
   if (no->evento.status == novo_status){
     printf("[ATENÇÃO]\nO evento de ID %d já possui o novo status inserido!\n", id);
+    return 0;
+  }
+
+  if (no->evento.status == RESOLVIDO && novo_status == ATIVO){
+    printf("[ERRO]\nNão é possível reativar um evento já resolvido (ID %d).\n", id);
     return 0;
   }
 
