@@ -88,7 +88,7 @@ static int _query_intervalo_id_rec(NoAVL *no, int id_min, int id_max){
 
   int count = 0;
 
-  if (no->evento.id > id_min)
+  if (no->evento.id >= id_min)
     count += _query_intervalo_id_rec(no->esquerda, id_min, id_max);
 
   if (no->evento.id >= id_min && no->evento.id <= id_max){
@@ -96,7 +96,7 @@ static int _query_intervalo_id_rec(NoAVL *no, int id_min, int id_max){
     count++;
   }
 
-  if (no->evento.id < id_max)
+  if (no->evento.id <= id_max)
     count += _query_intervalo_id_rec(no->direita, id_min, id_max);
 
   return count;
