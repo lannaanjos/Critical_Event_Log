@@ -3,6 +3,11 @@
 #include <string.h>
 #include "menu.h"
 
+static void _limpa_buffer(void){
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF);
+}
+
 // /\/\/\ leitura e validação de entradas
 int ler_int(const char *instruction, int min, int max){
   int valor;
@@ -10,13 +15,20 @@ int ler_int(const char *instruction, int min, int max){
 
   do {
     printf("%s", instruction);
-    if (scanf("%d", &valor) == 1 && valor >= min && valor <= max){
-      valido = 1;
-    } else {
-      printf("\n[ERRO]\nEntrada inválida! Informe um número entre %d e %d.", min, max);
-    }
 
-    while(getchar() != '\n'); // limpa buffer
+    int leu = scanf("%d", &valor);
+    int prox = getchar(); 
+    if (leu == 1 && prox == '\n'){
+      if (valor >= min && valor <= max){
+        valido = 1;
+      } else {
+        printf("\n[ERRO]\nNúmero fora do intervalo! Informe um valor entre %d e %d.\n", min, max);
+      }
+    } else {
+      printf("\n[ERRO]\nEntrada inválida! Digite apenas um número inteiro entre %d e %d.\n", min, max);
+      if (prox != '\n')
+        _limpa_buffer(); 
+    }
 
   } while(!valido);
 
@@ -24,12 +36,39 @@ int ler_int(const char *instruction, int min, int max){
 }
 
 void ler_string(const char *instruction, char *buffer, int tam){
+  int valido = 0;
+
+  do {
     printf("%s", instruction);
-    scanf(" ");
-    fgets(buffer, tam, stdin);
-    int len = strlen(buffer);
-    if (len > 0 && buffer[len-1] == '\n')
-        buffer[len - 1] = '\0';
+    if (fgets(buffer, tam, stdin) == NULL){
+      buffer[0] = '\0';
+    }
+
+    
+    int len = (int)strlen(buffer);
+    if (len > 0 && buffer[len - 1] == '\n')
+      buffer[len - 1] = '\0';
+
+    if (strlen(buffer) == 0){
+      printf("\n[ERRO]\nEntrada não pode ser vazia. Tente novamente.\n");
+      continue;
+    }
+
+    int so_numeros = 1;
+    for (int i = 0; buffer[i] != '\0'; i++){
+      if (buffer[i] < '0' || buffer[i] > '9'){
+        so_numeros = 0;
+        break;
+      }
+    }
+    if (so_numeros){
+      printf("\n[ERRO]\nNome inválido! Não pode ser apenas números. Tente novamente.\n");
+      continue;
+    }
+
+    valido = 1;
+
+  } while (!valido);
 }
 
 void limpa_tela(void){
@@ -42,7 +81,8 @@ void limpa_tela(void){
 
 void pausa(void){
   printf("\nPressione Enter para continuar...");
-  while(getchar() != '\n');
+  fflush(stdout);
+  _limpa_buffer();
 }
 
 
@@ -148,11 +188,17 @@ static TipoEvento _ler_tipo_evento(void){
 
   do {
     printf("Insira código do tipo de evento: ");
-    if (scanf("%d", &valor) != 1)
+    int leu = scanf("%d", &valor);
+    int prox = getchar();
+
+    if (leu != 1 || prox != '\n'){
+      printf("\n[ERRO]\nCódigo inválido! Digite apenas um número inteiro.\n");
+      if (prox != '\n')
+        _limpa_buffer();
       valor = -1;
-    while (getchar() != '\n');
-    if(!_tipo_evento_valido(valor))
+    } else if (!_tipo_evento_valido(valor)){
       printf("\n[ERRO]\nCódigo inválido! Tente novamente.\n");
+    }
   } while(!_tipo_evento_valido(valor));
 
   return (TipoEvento)valor;
@@ -272,7 +318,6 @@ void menu_consulta(AVL *avl){
       printf("  EVENTOS POR INTERVALO DE ID\n");
       int id_min = ler_int("ID minimo: ", 1, 999999);
       int id_max = ler_int("ID maximo: ", id_min, 999999);
-      printf("\n");
       query_eventos_por_intervalo(avl, id_min, id_max);
       pausa();
     }
