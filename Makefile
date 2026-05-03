@@ -1,7 +1,7 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -pedantic -g
-TARGET = cidade_inteligente
-SRDIR = src
+ CC      = gcc
+CFLAGS  = -Wall -Wextra -pedantic -g
+TARGET  = cidade_inteligente
+SRCDIR  = src
 
 SRCS = $(SRCDIR)/main.c \
        $(SRCDIR)/event.c \
@@ -14,14 +14,11 @@ all: $(TARGET)
 
 $(TARGET): $(SRCS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
- 
-# compila e executa
+
 run: all
 	./$(TARGET)
- 
-# remove o executável
+
 clean:
 	rm -f $(TARGET)
- 
-.PHONY: all run clean 
- 
+
+.PHONY: all run clean
