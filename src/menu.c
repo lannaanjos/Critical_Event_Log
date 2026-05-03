@@ -3,12 +3,6 @@
 #include <string.h>
 #include "menu.h"
 
-// descarta todos os caracteres pendentes no stdin até (e incluindo) '\n'.
-static void _limpa_buffer(void){
-  int c;
-  while ((c = getchar()) != '\n' && c != EOF);
-}
-
 // /\/\/\ leitura e validação de entradas
 int ler_int(const char *instruction, int min, int max){
   int valor;
@@ -22,7 +16,7 @@ int ler_int(const char *instruction, int min, int max){
       printf("\n[ERRO]\nEntrada inválida! Informe um número entre %d e %d.", min, max);
     }
 
-    _limpa_buffer(); //limpa o '\n' e qualquer lixo restante
+    while(getchar() != '\n'); // limpa buffer
 
   } while(!valido);
 
@@ -30,24 +24,12 @@ int ler_int(const char *instruction, int min, int max){
 }
 
 void ler_string(const char *instruction, char *buffer, int tam){
-  int valido = 0;
-
-  do {
     printf("%s", instruction);
-    if (fgets(buffer, tam, stdin) == NULL){
-      buffer[0] = '\0';
-    }
-
-    int len = (int)strlen(buffer);
-    if (len > 0 && buffer[len - 1] == '\n')
-      buffer[len - 1] = '\0';
-
-    if (strlen(buffer) == 0)
-      printf("\n[ERRO]\nEntrada não pode ser vazia. Tente novamente.\n");
-    else
-      valido = 1;
-
-  } while (!valido);
+    scanf(" ");
+    fgets(buffer, tam, stdin);
+    int len = strlen(buffer);
+    if (len > 0 && buffer[len-1] == '\n')
+        buffer[len - 1] = '\0';
 }
 
 void limpa_tela(void){
@@ -60,8 +42,7 @@ void limpa_tela(void){
 
 void pausa(void){
   printf("\nPressione Enter para continuar...");
-  fflush(stdout);
-  _limpa_buffer();
+  while(getchar() != '\n');
 }
 
 
@@ -169,7 +150,7 @@ static TipoEvento _ler_tipo_evento(void){
     printf("Insira código do tipo de evento: ");
     if (scanf("%d", &valor) != 1)
       valor = -1;
-    _limpa_buffer();
+    while (getchar() != '\n');
     if(!_tipo_evento_valido(valor))
       printf("\n[ERRO]\nCódigo inválido! Tente novamente.\n");
   } while(!_tipo_evento_valido(valor));
@@ -181,9 +162,9 @@ static DataHora _ler_datahora(void){
   DataHora dh;
 
   printf("Data e Hora do Evento\n\n");
-  dh.dia = ler_int("  Dia     (1-31): ", 1, 31);
-  dh.mes = ler_int("  Mês     (1-12): ", 1, 12);
   dh.ano = ler_int("  Ano     (1900 - 2100): ", 1900, 2100);
+  dh.mes = ler_int("  Mês     (1-12): ", 1, 12);
+  dh.dia = ler_int("  Dia     (1-31): ", 1, max_dias_mes(dh.mes, dh.ano));
   dh.hora = ler_int("  Hora    (0-23): ", 0, 23);
   dh.minuto = ler_int("  Minuto  (0-59): ", 0, 59);
   dh.segundo = ler_int("  Segundo (0-59): ", 0, 59);

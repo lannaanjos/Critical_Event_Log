@@ -322,6 +322,16 @@ const char *status_p_string(StatusEvento status){
   }
 }
 
+int max_dias_mes(int mes, int ano){
+  if (mes == 2){
+    int bissexto = (ano % 400 == 0) || (ano % 4 == 0 && ano % 100 != 0);
+    return bissexto ? 29 : 28;
+  }
+  if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
+    return 30;
+  return 31;
+}
+
 int valida_datahora(const DataHora *dh){
   if (dh == NULL)
     return 0;
@@ -329,29 +339,16 @@ int valida_datahora(const DataHora *dh){
   if(dh->ano < 1900 || dh->ano > 2100)
     return 0;
 
-  if(dh->mes < 1 || dh->mes >12)
+  if(dh->mes < 1 || dh->mes > 12)
     return 0;
 
-  if (dh->dia < 1 || dh->dia > 31)
+  if(dh->dia < 1 || dh->dia > max_dias_mes(dh->mes, dh->ano))
     return 0;
-
-  // meses com apenas 30 dias
-  int mes_30_dias = (dh->mes == 4 || dh->mes == 6 || dh->mes == 9 || dh->mes == 11);
-  if (mes_30_dias && dh->dia > 30)
-    return 0;
-
-  // fevereiro: verifica ano bissexto antes de checar limite de dias
-  if (dh->mes == 2) {
-    int bissexto = (dh->ano % 400 == 0) || (dh->ano % 4 == 0 && dh->ano % 100 != 0);
-    int max_fev = bissexto ? 29 : 28;
-    if (dh->dia > max_fev)
-      return 0;
-  }
 
   if(dh->hora < 0 || dh->hora > 23)
     return 0;
 
-  if(dh->minuto < 0 || dh -> minuto > 59)
+  if(dh->minuto < 0 || dh->minuto > 59)
     return 0;
 
   if(dh->segundo < 0 || dh->segundo > 59)

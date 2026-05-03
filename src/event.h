@@ -119,6 +119,7 @@ int valida_evento(const Evento *e);
 void exibe_evento(const Evento *e);
 void datahora_p_string(const DataHora *dh, char *buffer, int tam_buffer);
 int valida_datahora(const DataHora *dh);
+int max_dias_mes(int mes, int ano);
 
 int magnitude_por_tipo(TipoEvento tipo);
 
