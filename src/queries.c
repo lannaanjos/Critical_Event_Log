@@ -43,7 +43,7 @@ int query_ativos_por_magnitude(AVL *avl, int mag_min, int mag_max){
 
 // /\/\/\ POR regiao
 static int _query_regiao_recursiva(NoAVL *no, const char *regiao){
-  if (avl == NULL)
+  if (no == NULL)
     return 0;
 
   int count = 0;

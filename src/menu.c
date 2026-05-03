@@ -143,7 +143,7 @@ static int _tipo_evento_valido(int valor){
   return 0; // invalido 
 }
 
-static TipoEvento _let_tipo_evento(void){
+static TipoEvento _ler_tipo_evento(void){
   _exibir_tipos_evento();
   int valor;
 
@@ -159,7 +159,7 @@ static TipoEvento _let_tipo_evento(void){
   return (TipoEvento)valor;
 }
 
-static DataHora _let_datahora(void){
+static DataHora _ler_datahora(void){
   DataHora dh;
 
   printf("Data e Hora do Evento\n\n");
@@ -193,9 +193,10 @@ void menu_cadastro_evento(AVL *avl){
 
       Evento e;
       e.id = ler_int("ID do evento: ", 1, 999999);
-      e.magnitude = magnitude_por_tipo(e, tipo);
-      e.timestamp = _let_datahora();
-      ler_string("Região da cidade: ", e.regiao. TAM_MAX_NOME_REGIAO);
+      e.tipo = _ler_tipo_evento();
+      e.magnitude = magnitude_por_tipo(e.tipo);
+      e.timestamp = _ler_datahora();
+      ler_string("Região da cidade: ", e.regiao, TAM_MAX_NOME_REGIAO);
       e.status = ATIVO;
 
       printf("\n\nConfirmar cadastro?\n");
@@ -272,7 +273,7 @@ void menu_consulta(AVL *avl){
       printf("  EVENTOS POR INTERVALO DE ID\n\n");
       int id_min = ler_int("ID minimo: ", 1, 999999);
       int id_max = ler_int("ID maximo: ", id_min, 999999);
-      query_eventos_por_intervalo_id(avl, id_min, id_max);
+      query_eventos_por_intervalo(avl, id_min, id_max);
       pausa();
     }
  
